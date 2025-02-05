@@ -20,6 +20,13 @@ library(magrittr)
 ::: panel-tabset
 
 ### [**Mérida**]{style="color:#990000"}
+```{r}
+denhotspots::transmission_chains_map(geocoded_dataset = z,
+                                     cve_edo = "31",
+                                     locality = "Merida",
+                                     dengue_cases = "Probable")
+```
+
 :::
 
 
@@ -28,5 +35,20 @@ library(magrittr)
 ::: panel-tabset
 
 ### [**Mérida**]{style="color:#990000"}
+
+```{r}
+densnv::mp_heatmap(geocoded_datasets = z,
+                   cve_edo = "31",
+                   locality = c("Mérida", 
+                                "Kanasin",
+                                "Uman"),
+                   status_caso = c(1, 2),
+                   week = c(1:53),
+                   zoom = NULL,
+                   map_type = NULL,
+                   alpha = 0.6,
+                   static = FALSE,
+                   palette = viridis::turbo)
+```
 :::
 
