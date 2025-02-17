@@ -20,11 +20,34 @@ library(magrittr)
 ::: panel-tabset
 
 ### [**Mérida**]{style="color:#990000"}
-```{r}
-denhotspots::transmission_chains_map(geocoded_dataset = z,
-                                     cve_edo = "31",
-                                     locality = "Merida",
-                                     dengue_cases = "Probable")
+```{r cadenas_merida}
+geocoded_dataset <- z |>
+    dplyr::mutate(onset = FEC_INI_SIGNOS_SINT) |>
+    dplyr::mutate(x = long,
+                  y = lat) |>
+    sf::st_as_sf(coords = c("long", "lat"),
+                 crs = 4326) |>
+    dplyr::select(DES_MPO_RES,VEC_ID, onset, SEM, ESTATUS_CASO, x, y,
+                  DENGUE_SER_TRIPLEX, DES_DIAG_FINAL, IDE_EDA_ANO) |>
+    dplyr::mutate(ESTATUS_CASO = ifelse(ESTATUS_CASO == 2,
+                                        "Confirmado",
+                                        "Probable"))
+loc <- rgeomex::extract_locality(cve_edo = "31",
+                                 locality = "Mérida")
+geocoded_dataset <- geocoded_dataset[loc, ]
+
+x <- denhotspots::knox(x = geocoded_dataset,
+                       crs = "+proj=eqc",
+                       ds = 400, # distance in meters
+                       dt = 20,  # days 0 to 20 day
+                       sym = 1000,
+                       sp_link = FALSE, # for sf
+                       planar_coord = FALSE)
+
+denhotspots::space_time_link_map(x =x,
+                                 locality = "Mérida",
+                                 cve_edo = "31",
+                                 maptype = "interactive_map")
 ```
 
 :::
